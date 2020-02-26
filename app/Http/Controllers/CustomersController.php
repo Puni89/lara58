@@ -2,41 +2,68 @@
 
 namespace App\Http\Controllers;
 use App\Customer;
+use App\Company;
 use Illuminate\Http\Request;
 
 class CustomersController extends Controller
 {
-    public function list(){
-        $activeCustomer = Customer::whereStatus(1)->get();
-        $inActiveCustomer = Customer::whereStatus(0)->get();
-        
 
-        return view('internals.customers',compact('activeCustomer','inActiveCustomer'));
+    public function __construct(){
+        $this->middleware('auth')->except(['index']);
+    }
+
+    public function index(){
+       $customers = Customer::all();
+        return view('customers.index',compact('customers'));
+    }
+
+    public function create(){       
+        $company = Company::pluck('name','id')->all();
+        return view('customers.create',compact('company'));
+    }
+
+    public function show(Customer $customer){
+      //  $customer = Customer::find($id);
+
+        return view('customers.show',compact('customer'));
+
+    }
+
+    public function edit(Customer $customer){
+      // $customer = Customer::findORFail($customer);
+       $company = Company::pluck('name','id')->all();
+
+       return view('customers.edit',compact('customer','company'));
+    }
+
+    public function update(Customer $customer){
+        $rules = ['name'=>'required|min:3' ,
+        'email' => 'required|email',
+        'status' => 'required',
+        'company_id' => 'required',
+        ];   
+
+        $input = request()->validate($rules);             
+        $customer->update($input);        
+        return redirect('customer/'.$customer->id);
     }
 
     public function store(Request $request){
-         
-            
-
        $rules = ['name'=>'required|min:3' ,
                  'email' => 'required|email',
-                 'status' => 'required'
-                ];       
+                 'status' => 'required',
+                 'company_id' => 'required',
+                 ];   
 
-        $this->validate($request,$rules);
-        
-        //** With Out Fillable  ** 
-         $customer = new Customer();
-         $customer->name = $request->name;
-         $customer->email = $request->email;
-         $customer->status = $request->status;
-         $customer->save();
-       
+                $input =  $this->validate($request,$rules);                 
+                
+                Customer::create($input);        
+        return redirect('customer');
+    }
 
-        // $input =  $request->all(); 
 
-        // Customer::create($input);
-        
-        return back();
+    public function destroy(Customer $customer){
+        $customer->delete();
+        return redirect('customer');
     }
 }

@@ -1,12 +1,13 @@
-@extends('layouts.layout')
+@extends('layouts.app')
 
 @section('title')
-   Costomer List    
+  Edit Customers 
 @endsection
 
 @section('content')
+     <h3>Edit Customers </h3>   
 
-{!! Form::open(['method'=>'post','action'=>'CustomersController@store']) !!}
+{!! Form::model($customer,['method'=>'PATCH','action'=>['CustomersController@update',$customer->id]]) !!}
     <div class="form-group">
         {!! Form::label("name", 'Name') !!}
         {!! Form::text('name', null, ['class' => 'form-control']) !!}   
@@ -18,34 +19,19 @@
         {!! $errors->first('email', '<p class="text-danger">:message</p>') !!}
     </div>
     <div class="form-group">      
+        {!! Form::label("company_id", 'Company') !!}
+       {!! Form::select('company_id', [''=>'Choose Company'] + $company, null, ['class' => 'form-control']) !!}
+       
+
+        {!! $errors->first('company_id', '<p class="text-danger">:message</p>') !!}
+    </div>
+    <div class="form-group">      
         {!! Form::label("status", 'Status') !!}
-       {!! Form::select('status', [''=>'Selct Any one of them', 1=>'Active',0=>'Inactive'], '', ['class' => 'form-control']) !!}
+       {!! Form::select('status', array(1=>'Active',0=>'Inactive') , null, ['class' => 'form-control']) !!}
+       
         {!! $errors->first('status', '<p class="text-danger">:message</p>') !!}
     </div>
     {!! Form::submit('Click me!!', ['class' => 'btn btn-primary']) !!}
 {!! Form::close() !!}
 <hr>
-<h1 class="text-center">List Of Customers</h1>
-<div class="row">
-    <div class="col-sm-6">
-    <ul>
-        <h3>Active </h3>
-        @foreach( $activeCustomer as $item )
-        <li>{{ $item->name }} -*- {{ $item->email }} </li>    
-        @endforeach
-        </ul>
-    <ul>
-</div>
-<div class="col-sm-6">
-<ul>
-    <h4>Inactive </h4>
-@foreach( $inActiveCustomer as $item )
-<li>{{ $item->name }} -*- {{ $item->email }}</li>    
-@endforeach
-</ul>
-</div>
-</div>
-
-
-
 @endsection

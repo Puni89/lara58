@@ -16,18 +16,15 @@ Route::get('/', function () {
 });
 
 
-
-Route::get('contact',function(){
-    return view('contact');
-});
-
-
 Route::get('about',function(){
     return view('about');
 });
 
 
-Route::get('customer','CustomersController@list');
+Route::resource('customer', 'CustomersController');
 
-Route::post('customer','CustomersController@store');
+Route::resource('contact', 'ContactFormController');
 
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
