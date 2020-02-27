@@ -6,7 +6,7 @@
 
 @section('content')
      <h3>Add new Customers </h3>
-     <a href="/customer" class="btn btn-default pull-right">All Customer</a>
+<a href="{{ route('customer.index')}}" class="btn btn-default pull-right">All Customer</a>
 
 {!! Form::open(['method'=>'post','action'=>'CustomersController@store']) !!}
     <div class="form-group">

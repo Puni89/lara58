@@ -36,7 +36,7 @@
  {!! Form::submit('Delete', ['class'=>'btn btn-danger']) !!}
  {!! Form::close() !!}
   
-<a href="/customer/{{$customer->id}}/edit" class="btn btn-warning pull-right">Edit Customer</a>
+<a href=" {{ route('customer.edit',['custmer'=>$customer]) }} " class="btn btn-warning pull-right">Edit Customer</a>
 
 
 

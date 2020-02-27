@@ -4,7 +4,7 @@
  
 
 @section('content')
- 
+ <h2>Contact  US</h2>
     
     @if (!session()->has('message'))
     {!! Form::open(['method'=>'post','action'=>'ContactFormController@store']) !!}

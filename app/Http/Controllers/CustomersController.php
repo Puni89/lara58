@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Customer;
 use App\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeNewUser;
+use App\Events\NewCustomerHasRegisteredEvent;
 
 class CustomersController extends Controller
 {
@@ -57,8 +60,18 @@ class CustomersController extends Controller
 
                 $input =  $this->validate($request,$rules);                 
                 
-                Customer::create($input);        
-        return redirect('customer');
+        $customer = Customer::create($input);        
+      //  Mail::to($customer->email)->send(new WelcomeNewUser());
+        event(new NewCustomerHasRegisteredEvent($customer));      
+        
+        //Register to NewsLetter
+        dump('News letter');
+
+        //Slack notification to Admin
+        dump('Alack notificationto usr');
+
+
+        //return redirect('customer');
     }
 
 
