@@ -25,6 +25,22 @@ class CustomersController extends Controller
         return view('customers.create',compact('company'));
     }
 
+    public function store(Request $request){
+        $rules = ['name'=>'required|min:3' ,
+                  'email' => 'required|email',
+                  'status' => 'required',
+                  'company_id' => 'required',
+                  ];   
+ 
+         $input =  $this->validate($request,$rules);                 
+                 
+         $customer = Customer::create($input);        
+     
+         event(new NewCustomerHasRegisteredEvent($customer));      
+         
+         return redirect('customer');
+     }
+
     public function show(Customer $customer){
       //  $customer = Customer::find($id);
 
@@ -49,30 +65,7 @@ class CustomersController extends Controller
         $input = request()->validate($rules);             
         $customer->update($input);        
         return redirect('customer/'.$customer->id);
-    }
-
-    public function store(Request $request){
-       $rules = ['name'=>'required|min:3' ,
-                 'email' => 'required|email',
-                 'status' => 'required',
-                 'company_id' => 'required',
-                 ];   
-
-                $input =  $this->validate($request,$rules);                 
-                
-        $customer = Customer::create($input);        
-      //  Mail::to($customer->email)->send(new WelcomeNewUser());
-        event(new NewCustomerHasRegisteredEvent($customer));      
-        
-        //Register to NewsLetter
-        dump('News letter');
-
-        //Slack notification to Admin
-        dump('Alack notificationto usr');
-
-
-        //return redirect('customer');
-    }
+    }   
 
 
     public function destroy(Customer $customer){
